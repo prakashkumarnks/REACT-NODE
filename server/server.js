@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // form-urlencoded
 var upload = multer();
 // for parsing multipart/form-data
-app.use(upload.array()); 
+app.use(upload.array());
 app.use(express.static('public'));
 
 
@@ -31,33 +31,33 @@ const Model = require('./Model/QueryDb');
 let Db = new Model();
 
 app.use(session({
-   secret: 'ffff',
-   resave: true,
-   saveUninitialized: true
+	secret: 'ffff',
+	resave: true,
+	saveUninitialized: true
 }));
 
 
 
 app.use(function (req, res, next) {
-	  /*
-		 * var err = new Error('Not Found'); err.status = 404; next(err);
-		 */
+	/*
+	  * var err = new Error('Not Found'); err.status = 404; next(err);
+	  */
 
-	  // Website you wish to allow to connect
-	  res.setHeader('Access-Control-Allow-Origin', '*');
+	// Website you wish to allow to connect
+	res.setHeader('Access-Control-Allow-Origin', '*');
 
-	  // Request methods you wish to allow
-	  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+	// Request methods you wish to allow
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
-	  // Request headers you wish to allow
-	  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,X-Access-Token,XKey,Authorization');
+	// Request headers you wish to allow
+	res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,X-Access-Token,XKey,Authorization');
 
 	// res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With,
 	// Content-Type, Accept");
 
-	  // Pass to next layer of middleware
-	  next();
-	});
+	// Pass to next layer of middleware
+	next();
+});
 
 
 
@@ -73,32 +73,32 @@ app.use(function (req, res, next) {
 
 
 
-var common = require('./common');
+var common = require('./Common/common');
 
 app.post('/uploadmultiple', function (req, res) {
-   // var upload = multer({ storage : storage }).array('userPhoto',2);
+	// var upload = multer({ storage : storage }).array('userPhoto',2);
 
-   // var commonnew = new common();
-   // const userPhoto = common.storage('userPhoto', 2, '/imageupload/', req,
+	// var commonnew = new common();
+	// const userPhoto = common.storage('userPhoto', 2, '/imageupload/', req,
 	// res);
-   // const uploadmultiple = common.storage('uploadmultiple', 3,
+	// const uploadmultiple = common.storage('uploadmultiple', 3,
 	// '/uploadmultiple/', req, res);
-   var upload = multer({ dest: 'E:/reactlogin/server/uploadmultiple/' })
-   // var p = multer({ storage: userPhoto }).array('userPhoto', 2);
-   // var m = multer({ storage: uploadmultiple }).array('uploadmultiple', 3);
-   // console.log(imagename);
-   var p = upload.fields([{ name: 'userPhoto', maxCount: 2 }, { name: 'uploadmultiple', maxCount: 3 }])
+	var upload = multer({ dest: 'E:/reactlogin/server/uploadmultiple/' })
+	// var p = multer({ storage: userPhoto }).array('userPhoto', 2);
+	// var m = multer({ storage: uploadmultiple }).array('uploadmultiple', 3);
+	// console.log(imagename);
+	var p = upload.fields([{ name: 'userPhoto', maxCount: 2 }, { name: 'uploadmultiple', maxCount: 3 }])
 
-   // console.log(p);
+	// console.log(p);
 
-   p(req, res, function (err) {
+	p(req, res, function (err) {
 
-      console.log(req.files);
-      if (err) {
-         return res.end("Error uploading file.");
-      }
-      res.end("File is uploaded");
-   });
+		console.log(req.files);
+		if (err) {
+			return res.end("Error uploading file.");
+		}
+		res.end("File is uploaded");
+	});
 
    /*
 	 * m(req, res, function (err) {
@@ -115,109 +115,151 @@ app.post('/uploadmultiple', function (req, res) {
 
 
 app.post('/chech', function (req, res) {
-   var commonobj = new common();
-   var s = commonobj.InsertDateFormat("9.9.2017");
-   var v = commonobj.DispDateFormat("2017.9.9");
-   res.send({ InsertDateFormat: s , DispDateFormat: v });
+	var commonobj = new common();
+	var s = commonobj.InsertDateFormat("9.9.2017");
+	var v = commonobj.DispDateFormat("2017.9.9");
+	res.send({ InsertDateFormat: s, DispDateFormat: v });
 });
 
 
 app.post('/data', function (req, res) {
 
-   // var commonnew = new common();
-   let trans_Andriodhomepageimage = Db.SelectRecBySp("SELECT * FROM bind_activestatus");
-   var bind_gender = Db.SelectRecBySp('SELECT * FROM bind_gender');
-   var time = Db.myDateTime();
-   var timesec = Db.myDateTime();
+	// var commonnew = new common();
+	let trans_Andriodhomepageimage = Db.SelectRecBySp("SELECT * FROM bind_activestatus");
+	var bind_gender = Db.SelectRecBySp('SELECT * FROM bind_gender');
+	var time = Db.myDateTime();
+	var timesec = Db.myDateTime();
 
-   res.send({ artist: time, music: trans_Andriodhomepageimage, bind_gender: bind_gender, timesec: timesec });
-   // Db.RunQuery("insert into test(b,c) values(1,2)");
-   // Db.RunQuery("insert into test(b,c) values(1,2)");
+	res.send({ artist: time, music: trans_Andriodhomepageimage, bind_gender: bind_gender, timesec: timesec });
+	// Db.RunQuery("insert into test(b,c) values(1,2)");
+	// Db.RunQuery("insert into test(b,c) values(1,2)");
 });
 
 
 app.post('/statevsdistict', function (req, res, next) {
 	var sql = "SELECT district_id as value, district_Name as label FROM bindmaster_district where  IsActive = 1 ";
-	let  state = req.body.state;
+	let state = req.body.state;
+
+	if (state)
+		sql += ' and  state_id = ' + state + ' ';
+
+	Db.query(sql).then(rows => {
+		Db.query('SELECT * FROM bind_activestatus').then(rowssec => {
+			res.send({ ss: state, message: rows });
+		});
+
+	});
+});
+
+
+app.post('/myform', function (req, res, next) {
 	
-		if(state)
-			sql += ' and  state_id = '+ state +' ';
+	var a = req.body.a;
+	var b = req.body.b;
+	var RfId = req.body.RfId;
+	
+	if(!a)
+	{
+		res.send({ id : 'a' ,ErrorMessage : "Please enter a"});
+		return false;
+	}
+	
+	if(!b)
+	{
+		res.send({ id : 'b' ,ErrorMessage : "Please enter b"});
+		return false;
+	}
+	
+	
+	if(RfId)
+		{
+			 Db.RunQuery('update test set b = "'+a+'" , c = "'+b+'"  where a = '+RfId+' ').then(rowssec => {
+				 res.send({success : "success" , message:"updated ", rowssec : rowssec });
+			});
+		}
 		
-		 Db.query(sql).then( rows => {
-			 Db.query('SELECT * FROM bind_activestatus').then( rowssec => {
-				 	res.send({ ss: state , message: rows });
-			 } );
-		 
-		 } );
+	else
+		{
+			 Db.RunQuery('insert into test(b,c) values("'+a+'","'+b+'")').then(rowssec => {
+				  res.send({success : "success" , message:"inserted ", rowssec : rowssec });
+			 });
+		}
+});
+
+
+const Pagination = require('./Controller/pagination');
+
+
+
+
+
+app.post('/editupdate', function (req, res, next) {
+	
+	
+	
+	
+	
+	var sql = "SELECT * FROM test";
+	let RfId = req.body.RfId;
+
+	if (RfId)
+		sql += ' where  a = ' + RfId + ' ';
+		
+	 //page_id = parseInt(req.params.page),
+     //currentPage = page_id > 0 ? page_id : currentPage,
+	 currentPage = 0;
+    		 
+	//console.log(sql);
+	Db.query(sql).then(rowssec => {
+		Db.numRows("SELECT *  FROM test").then(totalCount => {
+			var Paginationlink = new Pagination(totalCount,currentPage,'view',10);
+			//const Paginate = new Pagination(totalCount,currentPage,pageUri,perPage);
+			res.send({data : rowssec , totalCount : totalCount ,pages : Paginationlink.links()});
+		
+		});	
 	});
 
-
-
-/*
-app.post('/statevsdistict', function (req, res, next) {
-
-	   // var commonnew = new common();
 	
-	var sql = "SELECT district_id as value, district_Name as label FROM bindmaster_district where  IsActive = 1 ";
-	let  state = req.body.state;
 	
-		if(state)
-			sql += ' and  state_id = '+ state +' ';
- 
-			
-	
-	// console.log(state);
-	   var bindmaster_district = Db.SelectRecBySp(sql);
-	   
-	   
-	 /*
-		 * var con = mysql.createConnection({ host: 'localhost', user:
-		 * 'prakash', password: 'prakash143', database: 'rigsindia', port: 3308
-		 * });
-		 * 
-		 * con.connect(function(err) { if (err) throw err; //Select all
-		 * customers and return the result object: con.query(sql, function (err,
-		 * result, fields) { if (err) throw err; // console.log(result);
-		 * res.send({ ss: state , message: result }); }); });
-		 */
-
-	  // res.send(state);
-	//  res.send({ ss: state , message: bindmaster_district });
-	   // Db.RunQuery("insert into test(b,c) values(1,2)");
-	   // Db.RunQuery("insert into test(b,c) values(1,2)");
-	//});
-
-
+});
 
 
 
 app.get('/', function (req, res) {
-   res.send('Hello Worldaaa');
+	res.send('Hello Worldaaa');
 })
 
-app.post('/insert', function (req, res) {
 
-   res.send(req.body.name);
+
+
+var singleclick = require('./singleclick');
+app.post('/singleclick', function (req, res) {
+
+	var data = singleclick.SelectRecBySp("SELECT * FROM bind_activestatus;");
+
+	//var data = singleclick.myDateTime();
+	res.send(data);
 })
+
 
 
 
 app.post('/upload', function (req, res) {
-   if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).send('No files were uploaded.');
-   }
+	if (!req.files || Object.keys(req.files).length === 0) {
+		return res.status(400).send('No files were uploaded.');
+	}
 
-   // The name of the input field (i.e. "sampleFile") is used to retrieve the
+	// The name of the input field (i.e. "sampleFile") is used to retrieve the
 	// uploaded file
-   let sampleFile = req.files.sampleFile;
-   var uploadPath = __dirname + '/imageupload/' + sampleFile.name;
-   // Use the mv() method to place the file somewhere on your server
-   sampleFile.mv(uploadPath, function (err) {
-      if (err)
-         return res.status(500).send(err);
+	let sampleFile = req.files.sampleFile;
+	var uploadPath = __dirname + '/imageupload/' + sampleFile.name;
+	// Use the mv() method to place the file somewhere on your server
+	sampleFile.mv(uploadPath, function (err) {
+		if (err)
+			return res.status(500).send(err);
 
-      res.send('File uploaded!');
-   });
+		res.send('File uploaded!');
+	});
 });
 
 
