@@ -43,15 +43,15 @@ class dropdown extends React.Component {
 
 
 	render() {
-		const { statedata, disdata } = this.state;
+		const {  disdata } = this.state;
 		const selectedValue = 1;
 		return (
 			<div>
-				<div class="container" >
-					<div class="row">
-						<div class="col-sm-3">
+				<div className="container" >
+					<div className="row">
+						<div className="col-sm-3">
 						
-							<Select class="form-control"
+							<Select 
 								//value={statedata}
 								value={this.options.filter(({ value }) => value === selectedValue)}
 								onChange={this.handleChange}
@@ -61,23 +61,23 @@ class dropdown extends React.Component {
 						</div>
 
 
-						<div class="col-sm-3">
+						<div className="col-sm-3">
 							
-							<Select class="form-control"
+							<Select className="form-control"
 								value={disdata}
 								onChange={this.handleChangesss}
 								options={this.state.disv}
 							/>
 						</div>
 
-						<div class="col-sm-3">
+						<div className="col-sm-3">
 							
 							<select>
 								{this.options.map((team) => <option key={team.value} value={team.value}>{team.label}</option>)}
 							</select>
 						</div>
 
-						<div class="col-sm-3">
+						<div className="col-sm-3">
 						
 							<select>
 								{this.options.map((team) => <option key={team.value} value={team.value}>{team.label}</option>)}
