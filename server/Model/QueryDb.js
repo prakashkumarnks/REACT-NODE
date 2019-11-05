@@ -9,14 +9,14 @@ class QueryDb {
 	}
 
 	// insert code here
-	RunQuery(sql) {
+	/*RunQuery(sql) {
 		this.con.query(sql, function (err, data) {
 			if (err)
 				throw err;
 			this.result = 1;
 		});
 		return this.result;
-	}
+	}*/
 
 	// return data with array
 	SelectRecBySp(sql) {
@@ -30,7 +30,7 @@ class QueryDb {
 	}
 
 	// return no of rows 
-	numRows(sql) {
+	/*numRows(sql) {
 		this.con.query(sql, function (err, res, fields) {
 			if (err) {
 				console.log(err);
@@ -42,8 +42,30 @@ class QueryDb {
 			}
 		});
 		return numRows;
-	}
+	}*/
 	
+	RunQuery( sql, args ) {
+        return new Promise( ( resolve, reject ) => {
+        	this.con.query( sql, args, ( err, result ) => {
+                if ( err )
+                    return reject( err );
+                resolve(result);
+                	
+            } );
+        } );
+    }
+	
+	
+	
+	numRows( sql, args ) {
+        return new Promise( ( resolve, reject ) => {
+        	this.con.query( sql, args, ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows.length );
+            } );
+        } );
+    }
 	
 	 query( sql, args ) {
 	        return new Promise( ( resolve, reject ) => {
