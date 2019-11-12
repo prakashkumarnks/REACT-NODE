@@ -135,6 +135,16 @@ app.post('/data', function (req, res) {
 	// Db.RunQuery("insert into test(b,c) values(1,2)");
 });
 
+app.post('/bindmaster_state', function (req, res) {
+
+	// var commonnew = new common();
+	///let bindmaster_state = Db.SelectRecBySp("");
+	var sql = "SELECT state_id as value,state_Name as label FROM bindmaster_state";
+	Db.query(sql).then(rows => {
+		res.send({ bindmaster_state : rows});
+	});
+});
+
 
 app.post('/statevsdistict', function (req, res, next) {
 	var sql = "SELECT district_id as value, district_Name as label FROM bindmaster_district where  IsActive = 1 ";
@@ -160,13 +170,13 @@ app.post('/myform', function (req, res, next) {
 	
 	if(!a)
 	{
-		res.send({ id : 'a' ,ErrorMessage : "Please enter a"});
+		res.send({ id : 'a',ErrorMessage : "Please enter a"});
 		return false;
 	}
 	
 	if(!b)
 	{
-		res.send({ id : 'b' ,ErrorMessage : "Please enter b"});
+		res.send({ id : 'b',ErrorMessage : "Please enter b"});
 		return false;
 	}
 	
@@ -235,10 +245,15 @@ app.get('/', function (req, res) {
 var singleclick = require('./singleclick');
 app.post('/singleclick', function (req, res) {
 
-	var data = singleclick.SelectRecBySp("SELECT * FROM bind_activestatus;");
+	//var data = singleclick.SelectRecBySp("SELECT * FROM bind_activestatus");
 
 	//var data = singleclick.myDateTime();
-	res.send(data);
+	//res.send(data);
+
+	singleclick.SelectRecBySp("SELECT * FROM bind_activestatus").then(data =>{
+			res.send(data);
+
+	});
 })
 
 
