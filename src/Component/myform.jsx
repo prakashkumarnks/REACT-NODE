@@ -4,9 +4,7 @@ import { Button, FormGroup, FormControl } from 'react-bootstrap';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 //import { sessionReducer } from 'redux-react-session';
-import  { globalvariable,a  }  from './test';
-
-
+import { httpverbsInsertForm, SessionNotSet } from './Common';
 
 class MyForm extends React.Component {
 
@@ -24,10 +22,8 @@ class MyForm extends React.Component {
 			vardisabled: false
 		};
 	}
-
-
-
 	componentDidMount() {
+
 		if (this.props.match.params.postId) {
 			axios.post('http://localhost:8082/editupdate', { RfId: this.props.match.params.postId })
 				.then(response => {
@@ -61,46 +57,26 @@ class MyForm extends React.Component {
 		bodyFormData.set('RfId', this.state.RfId);
 		bodyFormData.set('b', this.state.b);
 		bodyFormData.set('a', this.state.a);
-		axios({
-			method: 'post',
-			url: 'http://localhost:8082/myform',
-			data: bodyFormData,
-			headers: {
-				'Content-Type': 'multipart/form-data'
+
+		httpverbsInsertForm('/myform', bodyFormData).then(response => {
+			if (response.data.ErrorMessage) {
+				alert(response.data.ErrorMessage);
+				document.getElementById(response.data.id).focus();
+				return false;
+			}
+			if (response.data.success = "success") {
+				alert(response.data.message);
+				this.setState({ redirect: true });
 			}
 		})
-			//.then(function (response) {
-			.then((response) => {
-
-
-
-				if (response.data.ErrorMessage) {
-					alert(response.data.ErrorMessage);
-					document.getElementById(response.data.id).focus();
-					return false;
-				}
-
-				if (response.data.success = "success") {
-					alert(response.data.message);
-					this.setState({ redirect: true });
-				}
-
-
-			})
-			.catch(function(response) {
-
-				console.log(response);
-			});
-
-
 		event.preventDefault();
-
 	}
 
 	render() {
 
 
 		const { butonname, vardisabled } = this.state;
+
 
 		if (this.state.redirect) {
 			return <Redirect to='/view' />;
@@ -109,10 +85,8 @@ class MyForm extends React.Component {
 		return (
 			<div className="container">
 
-
+				{SessionNotSet()}
 				<div className="col-sm-6">
-
-					{ a() }
 					<form onSubmit={this.handleSubmit} method="POST">
 
 						<FormGroup controlId="RfId" >
@@ -154,14 +128,10 @@ class MyForm extends React.Component {
 							{butonname}
 						</Button>
 					</form>
-					
+
 				</div>
 			</div>
 		);
 	}
-
-
-
 }
-
 export default MyForm;

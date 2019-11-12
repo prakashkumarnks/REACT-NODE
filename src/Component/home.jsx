@@ -1,30 +1,20 @@
 import React from 'react';
 import PropData from './props';
-import { Redirect } from 'react-router-dom';
-//import { activateLasers } from './test';
 import Select from 'react-select';
+import { httpverbspost, SessionNotSet } from './Common';
 
 
 class home extends React.Component {
 
 	state = {
+		bindmaster_state: [],
 		redirect: false,
-		state : null,
-		dis : null,
+		statevalue: null,
+		district: [],
+		dis: [],
 	}
 
-	options = [
-		{ value: 1, label: 'Chocolate' },
-		{ value: 2, label: 'Strawberry' },
-		{ value: 3, label: 'Vanilla' },
-	];
 
-	renderRedirect = () => {
-
-		if (!localStorage.getItem("loggoed")) {
-			return <Redirect to="/login" />;
-		}
-	}
 
 	setRedirect = () => {
 		this.setState({
@@ -33,40 +23,63 @@ class home extends React.Component {
 	}
 
 
-	handleChange = state => {
-		//console.log(state.value);
-		this.setState({ dis : state.value });
+	componentDidMount() {
+		httpverbspost('/bindmaster_state', null).then(data => {
+			this.setState({ bindmaster_state: data.bindmaster_state });
+		})
+	}
+
+
+	handleChange = statevalue => {
+		this.setState({ statevalue });
+		this.setState({ district: [] });
+		httpverbspost('/statevsdistict', { state: statevalue.value }).then(response => {
+			this.setState({ dis: response.message });
+		});
 	};
+
+
+	changedistrict = district => {
+		this.setState({ district });
+	};
+
 
 	render() {
 		var loggoed = localStorage.getItem("loggoed");
-		const { options, state,dis } = this.state;
+		const { bindmaster_state, statevalue, district } = this.state;
 		return (
 
 
 			<div className="container" >
-				{this.renderRedirect()} home page {loggoed}
+				{SessionNotSet()} home page {loggoed}
+
 				<div className="row">
-
-
 
 					<div className="col-sm-3">
 						<Select
-							value={state}
+							value={statevalue}
+							//value={this.state.statevalue}
+							//value={bindmaster_state.filter(({ value }) => value === 2)}
 							onChange={this.handleChange}
-							options={this.options}
+							options={bindmaster_state}
 						/>
 					</div >
-
 					<div className="col-sm-3">
-						{dis}
-						<PropData brand={dis} />
+						<Select
+							value={district}
+							onChange={this.changedistrict}
+							options={this.state.dis}
+						/>
 					</div >
+					<div className="col-sm-3">
+						<PropData brand="2" />
+					</div >
+
+
 
 				</div >
 			</div >
 		);
 	}
 }
-
 export default home;

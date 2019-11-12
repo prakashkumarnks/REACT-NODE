@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import axios from 'axios';
 import parse from 'html-react-parser';
+import { httpverbsInsertForm, SessionNotSet } from './Common';
+
 
 class view extends React.Component {
 
@@ -13,14 +14,10 @@ class view extends React.Component {
 			pages: "",
 		}
 	}
-
-
-
 	componentDidMount() {
-		axios.post('http://localhost:8082/editupdate')
-			.then(response => {
-				this.setState({ droplets: response.data.data ,pages : response.data.pages  });
-				//	console.log(response.data);
+
+			httpverbsInsertForm('/editupdate').then(response => {
+				this.setState({ droplets: response.data.data, pages: response.data.pages });
 			})
 			.catch(error => {
 				console.log(error);
@@ -29,10 +26,11 @@ class view extends React.Component {
 
 
 	render() {
-		const { droplets ,pages } = this.state;
+		const { droplets, pages } = this.state;
 
 		return (
 			<div className="container">
+				{SessionNotSet()}
 				<table className="table">
 					<thead>
 						<tr>
@@ -51,7 +49,7 @@ class view extends React.Component {
 										<td> {user.a} </td>
 										<td>  {user.b} </td>
 										<td>  {user.c} </td>
-										<li><Link  to={`/myform/${user.a}`}>Edit</Link></li>
+										<td><Link to={`/myform/${user.a}`}>Edit</Link></td>
 									</tr>
 								)
 							})
@@ -59,7 +57,7 @@ class view extends React.Component {
 					</tbody>
 				</table>
 				{parse(pages)}
-			
+
 			</div>
 		)
 	}

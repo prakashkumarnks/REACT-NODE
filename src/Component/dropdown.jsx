@@ -51,7 +51,7 @@ class dropdown extends React.Component {
 					<div className="row">
 						<div className="col-sm-3">
 						
-							<Select 
+							<Select className="form-control"
 								//value={statedata}
 								value={this.options.filter(({ value }) => value === selectedValue)}
 								onChange={this.handleChange}
