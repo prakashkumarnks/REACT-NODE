@@ -60,11 +60,33 @@ export async function Awaitusesample(api, Formdata) {
 	return result;
 }
 
+export async function Fillddl(Query) {
+	let promise =  new Promise((resolve, reject) => {
+		axios.post(ServerApi + '/Fillddl', { Query: Query })
+			.then(response => {
+				//	console.log(response.data[1]);
+		var keys = Object.keys(response.data);
+		console.log(keys);
+				resolve(response);
+			})
+			.catch(error => {
+				return reject(error);
+			});
+	});
+	let result = await promise; // wait until the promise resolves (*)
+	return result;
+}
+
 export function SessionNotSet() {
 	var loggoed = localStorage.getItem("loggoed");
 	if (!loggoed) {
-		return <Redirect to='/login' />
+		return <Redirect to='/' />
 	}
 }
 
-
+/*
+export function logout() {
+    // remove user from local storage to log user out
+    localStorage.removeItem('loggoed');
+}
+*/
