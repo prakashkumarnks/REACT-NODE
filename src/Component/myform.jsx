@@ -1,10 +1,8 @@
 import React from 'react';
-//import ReactDOM from 'react-dom';
 import { Button, FormGroup, FormControl } from 'react-bootstrap';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
-//import { sessionReducer } from 'redux-react-session';
-import { httpverbsInsertForm, SessionNotSet } from './Common';
+import { httpverbsInsertForm } from './Common';
 
 class MyForm extends React.Component {
 
@@ -15,6 +13,7 @@ class MyForm extends React.Component {
             RfId: "",
             a: "",
             b: "",
+            selectedFile : null,
             sess: "",
             postId: "",
             butonname: "Submit",
@@ -27,10 +26,10 @@ class MyForm extends React.Component {
     componentDidMount() {
 
         if ( this.props.match.params.postId ) {
-            axios.post( 'http://localhost:8082/editupdate', { RfId: this.props.match.params.postId } )
+            axios.post( 'http://localhost:8083/editupdate', { RfId: this.props.match.params.postId } )
                 .then( response => {
                     ///	console.log(this.props.match.params.secpar);
-                    console.log( response.data );
+                    console.log( response.data.data[0].a);
 
                     this.setState( { RfId: response.data.data[0].a, a: response.data.data[0].b, b: response.data.data[0].c } );
                     this.setState( { butonname: 'Update' } );
@@ -52,8 +51,16 @@ class MyForm extends React.Component {
         } );
     }
 
-
-
+    checkimage=event=>{
+   /// checkimage(e) {
+        //console.log(e.target.files[0])
+     //   this.setState({ selectedFile : e.target.files[0] });
+        this.setState({
+            selectedFile: event.target.files[0],
+            loaded: 0,
+          })
+    }
+    
 
     //	handleSubmit () {
     handleSubmit = event => {
@@ -65,21 +72,21 @@ class MyForm extends React.Component {
             var id = item.id;
             var type = item.type;
 
-            if ( ( type == "text" || type == "textarea" ) ) {
+            if ( ( type === "text" || type === "textarea" ) ) {
 
-                var value = item.value.trim();
+                let value = item.value.trim();
                 //  alert(value);
 
-                if ( value == "" ) {
+                if ( value === "" ) {
                     item.focus();
                     alert( "please Fill " + id );
                     return false;
                 }
 
             }
-            else if ( type == "select-one" || type == "file" ) {
-                var value = item.value.trim();
-                if ( value == "" ) {
+            else if ( type === "select-one" || type === "file" ) {
+                let value = item.value.trim();
+                if ( value === "" ) {
                     var itemrequiredtext = item.getAttribute( 'data-required' );
                     item.focus();
                     alert( "please select " + itemrequiredtext );
@@ -98,7 +105,9 @@ class MyForm extends React.Component {
         bodyFormData.set( 'RfId', this.state.RfId );
         bodyFormData.set( 'b', this.state.b );
         bodyFormData.set( 'a', this.state.a );
-
+        bodyFormData.set( 'filesss', this.state.selectedFile );
+        
+        
         httpverbsInsertForm( '/myform', bodyFormData ).then( response => {
             if ( response.data.ErrorMessage ) {
                 alert( response.data.ErrorMessage );
@@ -126,8 +135,8 @@ class MyForm extends React.Component {
         return (
             <div className="container">
 
-                {SessionNotSet()}
-                <div className="col-sm-6">
+            
+                <div className="col-sm-4">
                     <form onSubmit={this.handleSubmit} method="POST">
 
                         <FormGroup controlId="RfId" >
@@ -167,18 +176,16 @@ class MyForm extends React.Component {
                             <label>b</label>
                             <FormControl
                                 value={this.state.filesss}
-                                //onChange={this.handleChange}
                                 type="file"
-                                // disabled={vardisabled}
                                 className="req"
                                 data-required="Image Upload"
+                                onChange={ this.checkimage }
                             />
                         </FormGroup>
 
 
                         <Button
-                            block
-                            //  disabled={!this.validateForm()}
+                            block 
                             type="submit"
                         >
                             {butonname}

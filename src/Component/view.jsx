@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import parse from 'html-react-parser';
-import { httpverbspost,httpverbsInsertForm,paginationlink,PerPagelimit } from './Common';
+import { httpverbspost,paginationlink ,ExportCSV } from './Common';
 class view extends React.Component {
 
 	constructor(props) {
@@ -48,13 +47,17 @@ class view extends React.Component {
 
 
 	render() {
-		const { droplets, pages , getresult ,totalCount} = this.state;
+		const { droplets  ,totalCount} = this.state;
 		 
       var i = this.state.start;
       console.log(i);
 		return (
 			<div className="container">
 		        { paginationlink(this.handlePageClick,totalCount) }
+		        
+		        
+		   
+		        
 				<table className="table">
 					<thead>
 						<tr>
@@ -82,7 +85,7 @@ class view extends React.Component {
 						}
 					</tbody>
 				</table>
-							
+		                    <ExportCSV csvData={droplets} fileName={'hai'} />	
 			</div>
 		)
 	}
